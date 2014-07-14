@@ -22,6 +22,7 @@ func request(url string) (objx.Map, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	request.Header.Set("X-Machape-Key", mashKey)
 	response, err := client.Do(request)
 	if err != nil {
@@ -53,16 +54,17 @@ func FromBTC(currency string) string {
 }
 
 func ToBTC(value, currency string) string {
-	url := fmt.Sprintf("%v%v%v%v", baseUrl, toBTCUrl, value, currency)
+	url := fmt.Sprintf("%v%v%v/%v", baseUrl, toBTCUrl, value, currency)
 	data, err := request(url)
 	if err != nil {
 		return fmt.Sprintf("%v\n", err)
 	}
 
-	currVal := data.Get("value")
-	curr := data.Get("currency")
+	fmt.Printf("data: %v\n", data)
+	currVal := data.Get("value").Str()
+	curr := data.Get("currency").Str()
 
-	return fmt.Sprint("%v BTC == %v %v\n", value, currVal, curr)
+	return fmt.Sprintf("%v BTC == %v %v\n", value, currVal, curr)
 
 }
 
